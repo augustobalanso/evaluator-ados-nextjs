@@ -16,21 +16,23 @@ export const Options = {
             async authorize(credentials, req) {
                 try {
                     const authResponse = await axios.post(`${process.env.STRAPI_URL}/api/auth/local`, {
-                        identifier: credentials.email,
-                        password: credentials.password
-                    });
-            
+                      identifier: credentials.email,
+                      password: credentials.password
+                    }).catch(error => {return error.response});
+
+                    console.log(authResponse.data)
+
                     const jwt = authResponse.data.jwt;
                     const user = authResponse.data.user;
-            
-                    const userResponse = await axios.get(`${process.env.STRAPI_URL}/api/users/${user.id}?populate=deep`, {
+
+                    const userResponse = await axios.get(`${process.env.STRAPI_URL}/api/users/me?populate=deep`, {
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': `bearer ${jwt}`
                         }
                     });
-            
-                    user.image = `${process.env.STRAPI_URL}${userResponse.data.avatar.url}`;
+
+                    user.image = `${process.env.STRAPI_URL}${userResponse.data.avatar.url}` || '' ;
             
                     if (!user) return null;
                     return user;

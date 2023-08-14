@@ -1,10 +1,9 @@
-interface FormData {
+interface RegistrationUserData {
     fullName: string;
-    address: string;
     email: string;
+    password: string;
+    address: string;
     phone: string;
-    avatar: File | null;
-    previewURL: string | null;
   }
 
-export default FormData
+export default RegistrationUserData

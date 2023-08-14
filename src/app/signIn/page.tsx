@@ -3,20 +3,36 @@
 import GoogleSignInButton from '../components/buttons/GoogleSignInButton'
 import FacebookSignInButton from '../components/buttons/FacebookSignInButton'
 import Link from 'next/link'
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function SignIn() {
+    const [error, setError] = useState<string | null >(null);
+    const router = useRouter();
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
+        setError(null);
         const form = new FormData(e.target as HTMLFormElement);
 
-        await signIn('credentials', {
-            email: form.get('email'),
-            password: form.get('password'),
-            callbackUrl: `/`
-        });
+        try{
+            const response = await signIn('credentials', {
+                email: form.get('email'),
+                password: form.get('password'),
+                redirect: false,
+            });
+
+            if (response?.error) {
+                setError('Credenciales incorrectas. Intenta nuevamente.');
+            } else {
+                // Handle successful sign-in if needed
+                router.push('/');
+                // You can manually redirect here using router.push('/desired-page')
+            }
+        } catch(err){
+            setError('Hubo un error al iniciar sesión.')
+        }
     }
 
     return (
@@ -66,7 +82,7 @@ export default function SignIn() {
                         </button>
                     </div>
                 </form>
-
+                {error && ( <p className="mt-8 text-xs font-light text-center text-red-600 animate-[pulse_2s]">{error}</p> )}
                 <p className="mt-8 text-xs font-light text-center text-gray-700  dark:text-white dark:opacity-60">
                     {' '}No tienes una cuenta?{' '}
                     <Link
