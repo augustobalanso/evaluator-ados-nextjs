@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import axios from 'axios'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation';
 import RegistrationUserData from '@/types/RegistrationUser'
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
@@ -21,6 +22,7 @@ const SignUp = () => {
     address: '',
     phone: ''
   });
+  const router = useRouter();
 
   const passwordToggle = (e: any) => {
     e.preventDefault()
@@ -55,7 +57,9 @@ const SignUp = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
-      console.log(response.data); // The response from the backend API
+      if(response.data.ok){
+        router.push('/signIn')
+      } // The response from the backend API
     } catch (error) {
       console.error(error);
     }

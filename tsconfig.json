@@ -29,7 +29,7 @@
               ".next/types/**/*.ts", 
               "src/app/api/[nextauth].js", 
               "src/middleware.js", 
-              "src/app/components/header/Header.jsx",
+              "src/app/components/header/Header.jsx", "src/app/api/user/newUser/route.js",
             ],
   "exclude": ["node_modules"]
 }
